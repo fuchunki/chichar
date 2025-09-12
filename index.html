@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>認字遊戲</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #image {
+            max-width: 300px;
+            max-height: 300px;
+            margin: 0 auto 20px; /* 置中並保留底部間距 */
+            display: block; /* 確保圖片居中 */
+        }
+        #options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .option {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .option:hover {
+            background-color: #45a049;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        #score {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+        #restart {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        #restart:hover {
+            background-color: #007399;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <img id="image" src="" alt="認字圖片">
+        <div id="options"></div>
+        <div id="message"></div>
+        <div id="score">得分：0</div>
+        <button id="restart">重新開始</button>
+    </div>
+    <script src="list.js"></script>
+    <script>
+        let remainingImages = [...images];
+        let currentImage;
+        let score = 0;
+
+        const imageElement = document.getElementById('image');
+        const optionsElement = document.getElementById('options');
+        const messageElement = document.getElementById('message');
+        const scoreElement = document.getElementById('score');
+        const restartButton = document.getElementById('restart');
+
+        // 從檔案名稱中提取答案（去除副檔名）
+        function getAnswer(filename) {
+            return filename.split('.')[0];
+        }
+
+        function updateScore() {
+            scoreElement.textContent = `得分：${score}`;
+        }
+
+        function startGame() {
+            if (remainingImages.length === 0) {
+                endGame();
+                return;
+            }
+
+            // 隨機選擇一張圖片
+            const randomIndex = Math.floor(Math.random() * remainingImages.length);
+            currentImage = remainingImages[randomIndex];
+            remainingImages.splice(randomIndex, 1);
+
+            // 顯示圖片
+            imageElement.src = `image/${currentImage}`;
+            imageElement.style.display = 'block';
+
+            // 清空選項和訊息
+            optionsElement.innerHTML = '';
+            messageElement.textContent = '';
+
+            // 隨機排序所有答案並創建選項按鈕
+            const shuffledAnswers = [...images].sort(() => Math.random() - 0.5);
+            shuffledAnswers.forEach(answer => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = getAnswer(answer);
+                button.onclick = () => checkAnswer(answer);
+                optionsElement.appendChild(button);
+            });
+
+            restartButton.style.display = 'none';
+        }
+
+        function checkAnswer(selected) {
+            const correctAnswer = getAnswer(currentImage);
+            if (getAnswer(selected) === correctAnswer) {
+                score += 10; // 答對加10分
+                messageElement.textContent = '正確！ +10分';
+                messageElement.style.color = 'green';
+                updateScore();
+                setTimeout(startGame, 1000); // 1秒後顯示下一張
+            } else {
+                score -= 5; // 答錯扣5分
+                messageElement.textContent = `錯誤 -5分`;
+                messageElement.style.color = 'red';
+                updateScore();
+            }
+        }
+
+        function endGame() {
+            imageElement.style.display = 'none';
+            optionsElement.innerHTML = '';
+            messageElement.textContent = `遊戲結束！最終得分：${score}`;
+            messageElement.style.color = 'blue';
+            restartButton.style.display = 'block';
+        }
+
+        restartButton.onclick = () => {
+            remainingImages = [...images];
+            score = 0;
+            updateScore();
+            startGame();
+        };
+
+        // 開始遊戲
+        startGame();
+    </script>
+</body>
+</html>
