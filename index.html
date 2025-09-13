@@ -92,6 +92,10 @@
         const scoreElement = document.getElementById('score');
         const restartButton = document.getElementById('restart');
 
+        // 載入音效
+        const correctSound = new Audio('audio/correct.mp3');
+        const wrongSound = new Audio('audio/wrong.mp3');
+        
         // 從檔案名稱中提取答案（去除副檔名）
         function getAnswer(filename) {
             return filename.split('.')[0];
@@ -139,12 +143,14 @@
                 score += 10; // 答對加10分
                 messageElement.textContent = '正確！ +10分';
                 messageElement.style.color = 'green';
+                correctSound.play().catch(error => console.log('音效播放失敗:', error));
                 updateScore();
                 setTimeout(startGame, 1000); // 1秒後顯示下一張
             } else {
                 score -= 5; // 答錯扣5分
                 messageElement.textContent = `錯誤 -5分`;
                 messageElement.style.color = 'red';
+                wrongSound.play().catch(error => console.log('音效播放失敗:', error));
                 updateScore();
             }
         }
@@ -168,4 +174,5 @@
         startGame();
     </script>
 </body>
+
 </html>
