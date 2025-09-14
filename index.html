@@ -41,9 +41,13 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 18px;
+            transition: background-color 0.2s; /* 點擊時平滑變色 */
         }
         .option:hover {
             background-color: #45a049;
+        }
+        .option.clicked {
+            background-color: #E12AFB; /* 點擊後變色 */
         }
         #message {
             margin-top: 20px;
@@ -129,7 +133,11 @@
                 const button = document.createElement('button');
                 button.className = 'option';
                 button.textContent = getAnswer(answer);
-                button.onclick = () => checkAnswer(answer);
+                button.onclick = () => {
+                    // 點擊時添加 clicked 類別以變色
+                    button.classList.add('clicked');
+                    checkAnswer(answer);
+                };
                 optionsElement.appendChild(button);
             });
 
@@ -175,4 +183,3 @@
 </body>
 
 </html>
-
