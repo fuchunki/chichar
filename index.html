@@ -84,6 +84,7 @@
         <button id="restart">重新開始</button>
     </div>
     <script src="list.js"></script>
+    <script src="audio.js"></script>
     <script>
         let remainingImages = [...images];
         let currentImage;
@@ -94,10 +95,6 @@
         const messageElement = document.getElementById('message');
         const scoreElement = document.getElementById('score');
         const restartButton = document.getElementById('restart');
-
-        // 載入音效
-        const correctSound = new Audio('audio/correct.mp3');
-        const wrongSound = new Audio('audio/wrong.mp3');
         
         // 從檔案名稱中提取答案（去除副檔名）
         function getAnswer(filename) {
@@ -183,3 +180,4 @@
 </body>
 
 </html>
+
