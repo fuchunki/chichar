@@ -147,15 +147,17 @@
                 score += 10; // 答對加10分
                 messageElement.textContent = '正確！ +10分';
                 messageElement.style.color = 'green';
+				updateScore();
+                setTimeout(startGame, 700); // 0.7秒後顯示下一張
+				correctSound.load();
                 correctSound.play().catch(error => console.log('音效播放失敗:', error));
-                updateScore();
-                setTimeout(startGame, 1000); // 1秒後顯示下一張
             } else {
                 score -= 5; // 答錯扣5分
                 messageElement.textContent = `錯誤 -5分`;
                 messageElement.style.color = 'red';
-                wrongSound.play().catch(error => console.log('音效播放失敗:', error));
                 updateScore();
+				wrongSound.load();
+                wrongSound.play().catch(error => console.log('音效播放失敗:', error));
             }
         }
 
