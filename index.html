@@ -86,7 +86,8 @@
     <script src="list.js"></script>
     <script src="audio.js"></script>
     <script>
-        let remainingImages = [...images];
+        let gameImages = [];
+        let remainingImages = [];
         let currentImage;
         let score = 0;
 
@@ -100,6 +101,14 @@
         function getAnswer(filename) {
             return filename.split('.')[0];
         }
+
+		// 隨機抽取 X 個圖片
+        function selectGameImages() {
+            const shuffled = [...images].sort(() => Math.random() - 0.5);
+            gameImages = shuffled.slice(0, NUM_WORDS);
+            remainingImages = [...gameImages];
+        }
+
 
         function updateScore() {
             scoreElement.textContent = `得分：${score}`;
@@ -124,8 +133,8 @@
             optionsElement.innerHTML = '';
             messageElement.textContent = '';
 
-            // 隨機排序所有答案並創建選項按鈕
-            const shuffledAnswers = [...images].sort(() => Math.random() - 0.5);
+            // 隨機排序抽取的 X 個答案並創建選項按鈕
+            const shuffledAnswers = [...gameImages].sort(() => Math.random() - 0.5);
             shuffledAnswers.forEach(answer => {
                 const button = document.createElement('button');
                 button.className = 'option';
@@ -170,13 +179,14 @@
         }
 
         restartButton.onclick = () => {
-            remainingImages = [...images];
+            selectGameImages();
             score = 0;
             updateScore();
             startGame();
         };
 
         // 開始遊戲
+		selectGameImages();
         startGame();
     </script>
 </body>
